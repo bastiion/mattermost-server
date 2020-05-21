@@ -21,12 +21,20 @@ RUN apk add --no-cache \
   && rm -rf /tmp/*
 
 # Get Mattermost
+#RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
+#  && if [ ! -z "$MM_PACKAGE" ]; then curl $MM_PACKAGE | tar -xvz ; \
+#  else echo "please set the MM_PACKAGE" ; fi \
+#  && addgroup -g ${PGID} mattermost \
+#  && adduser -D -u ${PUID} -G mattermost -h /mattermost -D mattermost \
+#  && chown -R mattermost:mattermost /mattermost /mattermost/plugins /mattermost/client/plugins
+
+COPY dist/mattermost-team-linux-amd64.tar.gz mattermost-team-linux-amd64.tar.gz
+
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
-  && if [ ! -z "$MM_PACKAGE" ]; then curl $MM_PACKAGE | tar -xvz ; \
-  else echo "please set the MM_PACKAGE" ; fi \
-  && addgroup -g ${PGID} mattermost \
-  && adduser -D -u ${PUID} -G mattermost -h /mattermost -D mattermost \
-  && chown -R mattermost:mattermost /mattermost /mattermost/plugins /mattermost/client/plugins
+    && tar -xzf  mattermost-team-linux-amd64.tar.gz \
+    && addgroup -g ${PGID} mattermost \
+    && adduser -D -u ${PUID} -G mattermost -h /mattermost -D mattermost \
+    && chown -R mattermost:mattermost /mattermost /mattermost/plugins /mattermost/client/plugins
 
 USER mattermost
 
